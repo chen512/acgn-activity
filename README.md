@@ -15,7 +15,7 @@
       ├── components  //game-open组件库
       ├── config      //配置目录
       ├── entrys      //每个活动代码在这里
-      └── mock        //本地API mock 来自game-open
+      └── mock        //本地API mock
 ```
 
 ### 项目初始化
