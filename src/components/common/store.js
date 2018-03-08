@@ -10,14 +10,10 @@ const DEFAULT_USERINFO = {
 }
 export default new Vuex.Store({
     state: {
-        // uid: '',
-        token: util.getQueryString('token') || 0,
+        token: util.isInBrowser() && util.getUrlParam('token'),
         userInfo: DEFAULT_USERINFO,
     },
     mutations: {
-        /*setUid(state, uid) {
-            state.uid = uid;
-        },*/
         setToken(state, token) {
             state.token = token;
         },

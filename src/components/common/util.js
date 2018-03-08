@@ -1,7 +1,7 @@
 let global = typeof window != 'undefined' ? window : (function() {return this})() || {};
 let _isNative = global.callNative ? true : false;
 export default {
-	getQueryString: function(name) {
+	getUrlParam(name) {
 	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
 	    var r = window.location.search.substr(1).match(reg);
 	    if (r != null) {
@@ -9,7 +9,7 @@ export default {
 	    }
 	    return null;
 	},
-	isAndroid: function() {
+	isAndroid() {
 		let agent = navigator.userAgent;
 		let flag = false;
 		if(agent.indexOf('Android') > -1 || agent.indexOf('Linux') > -1) {
@@ -17,7 +17,7 @@ export default {
 		}
 		return flag;
 	},
-	isIOS: function() {
+	isIOS() {
 		let agent = navigator.userAgent;
 		let flag = false;
 		if(!!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
@@ -25,24 +25,25 @@ export default {
 		}
 		return flag;
 	},
-	isNative: function() {
+	isInBrowser() {
+		return typeof window != 'undefined';
+	},
+	isNative() {
 		return _isNative;
 	},
-	isObject: function(obj) {
+	isObject(obj) {
 		return obj !== null && typeof obj === 'object'
 	},
 	// 客户端接口
 	/*登录接口 回调接口userInfo: function(token, avator, name)*/
-	login: function() {
+	login() {
 		if(this.isAndroid()) {
 			callNative.login();
 		} else if(this.isIOS()) {
 			window.webkit.messageHandlers.login.postMessage(null)
 		}
 	},
-	// 时间格式化
-	/*formatDate(new Date(), 'yyyyMMdd-hhmmss')*/
-	formatDate: function(format, date) {
+	formatDate(format, date) {
 	    var o = {
 	        'M+': date.getMonth() + 1,
 	        'd+': date.getDate(),
@@ -65,4 +66,45 @@ export default {
 	    }
 	    return format;
 	},
+	installApp() {
+		let url = {};
+		let ua = navigator.userAgent.toLowerCase();
+		if(ua.match(/android/i)){
+		    url = {
+		        open: 'lishijie://splash',
+		        down: 'https://www.lishijie.net/download/android/lishijie.apk'
+		    };
+		}
+		if(ua.match(/iphone|ipod|ipad/)){
+		    url = {
+		        open: 'lishijie://splash',
+		        down: 'https://itunes.apple.com/cn/app/wei-xin/id414478124?mt=8&ign-mpt=uo%3D4'
+		    };
+		}
+		let winScreenWidth = window.screen.width;
+		var iframe = document.createElement('iframe');
+		var timer = null;
+		var isInstalled = false;
+		if(winScreenWidth < 800){
+		    document.body.appendChild(iframe);
+		    iframe.src = url.open;
+		    iframe.style.display = 'none';
+		    iframe.onload = function(e){
+		        var e = e || window.event;
+		        e.preventDefault();
+		        isInstalled = true
+		    }
+		    iframe.onerror = function() {
+		        isInstalled = false;
+		    }
+		    timer = setTimeout(function() {
+		        document.body.removeChild(iframe);
+		        if(!isInstalled){
+		            window.location.href = 'market://search?q=里世界';
+		        }
+		    }, 200);
+		} else {
+		    window.location.href = 'https://www.lishijie.net/download/android/lishijie.apk'
+		}
+	}
 }

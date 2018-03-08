@@ -118,6 +118,7 @@ chain.add('oauth/activity/player_info/save', function() {
         "value": {}
     })
 });
+//https://api-game.meizu.com/games/oauth/activity/zippo/do/1455
 chain.add('oauth/activity/zippo/do/:activityId', function(req, params) {
     if(req.query.__mockAward__ && req.query.__mockAward__ != 'RAND') {
         return Mock.mock({
@@ -171,7 +172,7 @@ chain.add('oauth/activity/zippo/times/:activityId', function() {
                 "consumePrice": 0,
                 "email": "649397393@qq.com",
                 "flyme": "tain335",
-                "icon": "",
+                "icon": "http://image.res.meizu.com/image/uc/423ab7a3c1724a0aafaef7ff8a18f492z?t=946656000000",
                 "lastLoginIp": -1408105428,
                 "lastLoginTime": 1497838310000,
                 "nickname": "用户30723300",
@@ -251,7 +252,7 @@ chain.add('apps', function(req, params) {
                 "evaluate_count": 26, 
                 "icon": Mock.Random.dataImage('100x100', '游戏'),
                 "images": [
-                    {"height":480,"id":null,"image":"","imageWebp":null,"otherHeight":null,"otherWidth":null,"small":"","smallWebp":null,"sortOrder":null,"status":null,"versionId":6957785,"width":270}
+                    {"height":480,"id":null,"image":"http://game.res.meizu.com/fileserver/app_ad_snap/3188/9d30101a30bc40d48cfb101b954b5f7c.jpg","imageWebp":null,"otherHeight":null,"otherWidth":null,"small":"http://game.res.meizu.com/fileserver/app_ad_snap_small/3694/8da3ea490faf4c5a88afa3424d97c152.jpg","smallWebp":null,"sortOrder":null,"status":null,"versionId":6957785,"width":270}
                 ],
                 "name|1": ["coupon测试1", "超长APP名称啦啦啦啦啦了", "测试APP"], 
                 "packageName":"com.coupon1.test.mz",
