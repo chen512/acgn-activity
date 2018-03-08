@@ -141,7 +141,7 @@ export default {
     name: 'app',
     data() {
         return {
-            shareDomain: '//https://www.lishijie.net',  
+            shareDomain: 'https://www.lishijie.net',
             toastMsg: '',
             toastDuration: 2000,
             authorList: [],
@@ -287,7 +287,7 @@ export default {
                 // todo
                 // 'url': this.shareDomain + '/acgn-coser/html/index.html', 
                 'url': 'http://172.16.185.182/acgn-coser/html/index.html', 
-                'avatar': this.shareDomain + '/utils/image/acgn-coser.jpg'  
+                'avatar': 'https://www.lishijie.net/utils/image/acgn-coser.jpg'
             };
             if(util.isAndroid()) {
                 callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
