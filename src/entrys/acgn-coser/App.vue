@@ -133,181 +133,189 @@
     </div>
 </template>
 <script>
-import {pageTracking, enterAuthorPageTracking, userFocusList, viewAuthorTracking} from 'common/api';
-import util from 'common/util';
-import Toast from 'business/Toast.vue';
-import FooterBar from 'business/FooterBar.vue';
-export default {
-    name: 'app',
-    data() {
-        return {
-            shareDomain: 'https://www.lishijie.net',
-            toastMsg: '',
-            toastDuration: 2000,
-            authorList: [],
-        }
-    },
-    computed: {
-        sharePage() {  //true为在app内， false为分享出去的
-            let isShare = true;
-            if(this.$store.state.token == null) {
-                isShare = false
+    import {pageTracking, enterAuthorPageTracking, userFocusList, viewAuthorTracking} from 'common/api';
+    import util from 'common/util';
+    import Toast from 'business/Toast.vue';
+    import FooterBar from 'business/FooterBar.vue';
+    export default {
+        name: 'app',
+        data() {
+            return {
+                shareDomain: 'https://www.lishijie.net',
+                toastMsg: '',
+                toastDuration: 2000,
+                authorList: [],
             }
-            return isShare;
         },
-        msg() {
-            let show = false
-            if(this.toastMsg) {
-                show = true;
-                setTimeout(() => {
-                    this.toastMsg = ''
-                }, this.toastDuration)
-            } else {
-                show = false
-            }
-            return show;
-        },
-    },
-    mounted() {
-        let self = this;
-        pageTracking({token: this.$store.state.token, contentId: 4}).then((res) => {
-            console.log(res + '页面PV UV');
-        });
-
-        // 获取关注作者列表
-        this.getUserFocusList();
-
-        // 登录的回调接口
-        window.userInfo = function(token, avatar, name) {
-            self.$store.commit('setToken', token);
-            self.getUserFocusList();
-        }
-
-        // 关注操作的回调函数
-        window.focus = function(focus, authorId, authorList) {
-            if(authorList) {
-                self.updateFocusBtn(JSON.parse(authorList));
-                self.toastMsg = '你已关注此作者，快去他/她的主页看看吧！'; 
-            }
-        }
-    },
-    methods: {
-        getUserFocusList() {
-            if(this.sharePage) { //在活动里面
-                if(this.$store.state.token) {  //且登录了
-                    userFocusList({token: this.$store.state.token}).then((res) => {
-                        let data = res.data.data;
-                        if(data) {
-                            this.updateFocusBtn(data);
-                        } else {
-                            this.authorList = [{"authorId": 18150,"isFocus": 0}, {"authorId": 15420,"isFocus": 0}, {"authorId": 15198,"isFocus": 0}]
-                        }
-                    })
+        computed: {
+            sharePage() {  //true为在app内， false为分享出去的
+                let isShare = true;
+                if(this.$store.state.token == null || this.$store.state.token == undefined) {
+                    isShare = false
+                }
+                return isShare;
+            },
+            msg() {
+                let show = false
+                if(this.toastMsg) {
+                    show = true;
+                    setTimeout(() => {
+                        this.toastMsg = ''
+                    }, this.toastDuration)
                 } else {
-                    util.login();
+                    show = false
+                }
+                return show;
+            },
+        },
+        mounted() {
+            let self = this;
+            pageTracking({token: this.$store.state.token, contentId: 4}).then((res) => {
+                console.log(res + '页面PV UV');
+            });
+
+            // 获取关注作者列表
+            this.getUserFocusList();
+
+            // 登录的回调接口
+            window.userInfo = function(token, avatar, name) {
+
+                self.$store.commit('setToken', token);
+                self.getUserFocusList();
+            }
+
+            // 关注操作的回调函数
+            window.focus = function(focus, authorId, authorList) {
+
+                if(authorList) {
+                    self.updateFocusBtn(JSON.parse(authorList),authorId);
+                    self.toastMsg = '你已关注此作者，快去他/她的主页看看吧！';
                 }
             }
         },
-        markAuthor(authorId) {
-            if(this.sharePage) {  //在活动里面
-                if(this.$store.state.token) {
-                    let param = {authorId}
-                    if (util.isAndroid()) {
-                        callNative.markAuthor(authorId, 1, JSON.stringify(this.authorList));
-                    } else if (util.isIOS()) {
-                        callNative.markAuthor(authorId, 1, JSON.stringify(this.authorList));
+        methods: {
+            getUserFocusList() {
+                if(this.sharePage) { //在活动里面
+                    if(this.$store.state.token) {  //且登录了
+                        userFocusList({token: this.$store.state.token}).then((res) => {
+                            let data = res.data.data;
+                            if(data) {
+                                this.authorList = data;
+                                let list = document.querySelectorAll('.focus');
+                                for(let i = 0; i < this.authorList.length; i++) {
+                                    if(this.authorList[i].isFocus) {
+                                        list[i].classList.add('focused');
+                                    }
+                                }
+                            } else {
+                                this.authorList = [{"authorId": 18150,"isFocus": 0}, {"authorId": 15420,"isFocus": 0}, {"authorId": 15198,"isFocus": 0}]
+                            }
+                        })
+                    } else {
+                        util.login();
                     }
-                    // 当已经关注过了，再次点击的时候就不埋点.
-                    for(let i = 0; i < this.authorList.length; i++) {
-                        if(this.authorList[i].authorId = authorId && !this.authorList[i].isFocus) {
-                            viewAuthorTracking({token: this.$store.state.token, authorId: authorId}).then((res) => {
-                                console.log(res+'点击关注作者的埋点')
-                            })
+                }
+            },
+            markAuthor(authorId) {
+                if(this.sharePage) {  //在活动里面
+                    if(this.$store.state.token) {
+                        let param = {authorId}
+                        if (util.isAndroid()) {
+                            callNative.markAuthor(authorId, 1, JSON.stringify(this.authorList));
+                        } else if (util.isIOS()) {
+                            callNative.markAuthor(authorId, 1, JSON.stringify(this.authorList));
                         }
+                        // 当已经关注过了，再次点击的时候就不埋点.
+                        for(let i = 0; i < this.authorList.length; i++) {
+                            if(this.authorList[i].authorId = authorId && !this.authorList[i].isFocus) {
+                                viewAuthorTracking({token: this.$store.state.token, authorId: authorId}).then((res) => {
+                                    console.log(res+'点击关注作者的埋点')
+                                })
+                            }
+                        }
+                    } else {
+                        util.login();
                     }
+                } else { //分享出去的页面
+                    this.toastMsg = '如果你已下载App请在应用内打开，如未下载请点击下方下载按钮下载';
+                }
+            },
+            updateFocusBtn(data,authorId) {
+                this.authorList = data;
+
+                let list = document.querySelectorAll('.focus');
+                for(let i = 0; i < this.authorList.length; i++) {
+                    if(this.authorList[i].authorId == authorId) {
+                        list[i].classList.add('focused');
+                    }
+                }
+            },
+            viewArt(authorId) {
+                let param = {token: this.$store.state.token, 'authorId': authorId};
+                enterAuthorPageTracking(param).then((res) => {
+                    console.log(res + '点击进入作者主页埋点');
+                })
+                if(this.sharePage) { //在活动页面，则正常进入作者主页
+                    this.enterAuthorPage(authorId);
+                } else {    //分享出去的页面，则进行下载/打开
+                    this.openApp();
+                }
+            },
+            enterAuthorPage(authorId) {
+                if (util.isAndroid()) {
+                    callNative.viewArt(authorId);
+                } else if (util.isIOS()) {
+                    callNative.viewArt(authorId);
                 } else {
-                    util.login();
+                    console.log('浏览器环境中')
                 }
-            } else { //分享出去的页面
-                this.toastMsg = '如果你已下载App请在应用内打开，如未下载请点击下方下载按钮下载';
-            }
-        },
-        updateFocusBtn(data) {
-            this.authorList = data;
-            let list = document.querySelectorAll('.focus');
-            for(let i = 0; i < this.authorList.length; i++) {
-                if(this.authorList[i].isFocus) {
-                    list[i].classList.add('focused');
+            },
+            openApp() {
+                if(util.isIOS()) {
+                    this.toastMsg = 'iOS版本即将上线，敬请期待';
+                    return;
                 }
-            }
-        },
-        viewArt(authorId) {
-            let param = {token: this.$store.state.token, 'authorId': authorId};
-            enterAuthorPageTracking(param).then((res) => {
-                console.log(res + '点击进入作者主页埋点');
-            })
-            if(this.sharePage) { //在活动页面，则正常进入作者主页
-                this.enterAuthorPage(authorId);
-            } else {    //分享出去的页面，则进行下载/打开
-                this.openApp();
-            }
-        },
-        enterAuthorPage(authorId) {
-            if (util.isAndroid()) {
-                callNative.viewArt(authorId);
-            } else if (util.isIOS()) {
-                callNative.viewArt(authorId);
-            } else {
-                console.log('浏览器环境中')
-            }
-        },
-        openApp() {
-            if(util.isIOS()) {
-                this.toastMsg = 'iOS版本即将上线，敬请期待';
-                return;
-            }
-            if(/MicroMessenger/gi.test(navigator.userAgent)) {
-                this.toastMsg = '请到应用宝、小米、oppo等应用商店下载App';
-                return;
-            }
-            util.installApp();
-        },
-        goBack() {
-            if(util.isAndroid()) {
-                callNative.goBack();
-            } else if (util.isIOS()) {
-                // window.webkit.messageHandlers.goBack.postMessage(null)
-                callNative.goBack();
-            }
-        },
-        shareWeb() {
-            let param = {
-                'supTitle': '呀！这是谁家的coser？捕捉最美小姐姐',
-                'subTitle': 'coser出没，请注意！',
-                // todo
-                // 'url': this.shareDomain + '/acgn-coser/html/index.html', 
-                'url': 'http://172.16.185.182/acgn-coser/html/index.html', 
-                'avatar': 'https://www.lishijie.net/utils/image/acgn-coser.jpg'
-            };
-            if(util.isAndroid()) {
-                callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
-            } else if (util.isIOS()) {
-                // window.webkit.messageHandlers.shareWeb.postMessage(param)
-                callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
-            }
-        },
-    },
-    components: {
-        Toast,
-        FooterBar
-    },
-    watch: {
-        '$store.state.token': {
-            handler:(val, oldVal)=>{
-                if(val != oldVal) {
+                if(/MicroMessenger/gi.test(navigator.userAgent)) {
+                    this.toastMsg = '请到应用宝、小米、oppo等应用商店下载App';
+                    return;
+                }
+                util.installApp();
+            },
+            goBack() {
+                if(util.isAndroid()) {
+                    callNative.goBack();
+                } else if (util.isIOS()) {
+                    // window.webkit.messageHandlers.goBack.postMessage(null)
+                    callNative.goBack();
+                }
+            },
+            shareWeb() {
+                let param = {
+                    'supTitle': '呀！这是谁家的coser？捕捉最美小姐姐',
+                    'subTitle': 'coser出没，请注意！',
+                    'url': this.shareDomain + '/acgn-coser/html/index.html',
+                    // 'url': 'http://172.16.185.182/acgn-coser/html/index.html',
+                    'avatar': 'https://www.lishijie.net/utils/image/acgn-coser.jpg'
+                };
+                if(util.isAndroid()) {
+                    callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
+                } else if (util.isIOS()) {
+                    // window.webkit.messageHandlers.shareWeb.postMessage(param)
+                    callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
                 }
             },
         },
+        components: {
+            Toast,
+            FooterBar
+        },
+        watch: {
+            '$store.state.token': {
+                handler:(val, oldVal)=>{
+                    if(val != oldVal) {
+                    }
+                },
+            },
+        }
     }
-}
 </script>

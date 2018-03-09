@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-let base = 'http://172.16.185.184'; // http://172.16.185.184  https://app.lishijie.net
+let base = 'https://app.lishijie.net'; // http://172.16.185.184  https://app.lishijie.net
 
 // comment
 export const commentAdd = params => { return axios.post(`${base}/comment/add`, qs.stringify(params))};

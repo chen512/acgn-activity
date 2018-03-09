@@ -61,7 +61,7 @@ exports.buildHtmlPlugins = function(dir, injectHTMLData) {
                     removeComments: false
                 },
                 IS_DEV: process.env.NODE_ENV == 'debug',
-                injectData: injectHTMLData,
+                // injectData: injectHTMLData,
                 cache: false 
             }));
         } else {
