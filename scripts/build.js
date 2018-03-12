@@ -63,7 +63,7 @@ const ssrCompiler = webpack({
                 loader: 'url-loader',
                 options: {
                     limit: 2048,
-                    name: 'images/[name].[hash:8].webp'
+                    name: 'images/[name].[hash:8].[ext]'
                 },
                 exclude: /node_modules/
             }
@@ -94,7 +94,7 @@ const presets = ["babel-preset-es2015", "babel-preset-stage-0"].map(require.reso
 const plugins = ['babel-plugin-transform-runtime'].map(require.resolve);
 const standardCompiler = webpack({
     context: config.ACTIVITY_BASE_DIR,
-    entry: Object.assign({ vendor: ["vue", "vuex", "vue-resource"] }, builder.buildEntrys(process.argv[2], 'production')),
+    entry: Object.assign({ vendor: ["vue", "vuex", "axios"] }, builder.buildEntrys(process.argv[2], 'production')),
     output: {
         path: config.ACTIVITY_BUILD_DIR,
         filename: "js/[name].[hash:8].js",
@@ -193,17 +193,17 @@ const standardCompiler = webpack({
                         loader:'url-loader',
                         options: {
                             limit: 2048,
-                            name: 'images/[name].[hash:8].webp'
+                            name: 'images/[name].[hash:8].[ext]'
                         }
-                    },
+                    }/*,//Matt 跟电脑系统有关
                     {
                         loader: 'image-webpack-loader',
                         options: {
                             webp: {
-                                quality: 90
+                                quality: 75
                             }
                         }
-                    }
+                    }*/
                 ]
             },
             {
