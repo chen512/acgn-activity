@@ -1,4 +1,6 @@
-import axios from 'axios';
+// import axios from 'axios';
+require('es6-promise').polyfill();
+var axios = require('axios');
 import qs from 'qs';
 let base = 'https://app.lishijie.net'; // http://172.16.185.184  https://app.lishijie.net
 
@@ -12,7 +14,7 @@ export const userFocusList = params => { return axios.get(`${base}/user/listFocu
 
 // 埋点
   //进入活动页面
-export const pageTracking = params => { return axios.get(`${base}/bizLog/viewRecord`, {params: params})};
+export const pageTracking = params => { return axios.get(`${base}/bizLog/viewRecord`, qs.stringify(params))};
   //进入作者主页
 export const enterAuthorPageTracking = params => { return axios.get(`${base}/bizLog/profileViewRecord2`, {params: params})};
   // 关注作者

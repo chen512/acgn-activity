@@ -98,7 +98,7 @@ export default {
     name: 'app',
     data() {
         return {
-            shareDomain: '//https://www.lishijie.net',  
+            shareDomain: 'http://www.lishijie.net', 
             toastMsg: '',
             toastDuration: 2000,
         }
@@ -127,9 +127,8 @@ export default {
     mounted() {
         let param = {token: this.$store.state.token, contentId: 3};
         pageTracking(param).then((res) => {
-            console.log(res + '页面PV UV');
-        });
-
+           console.log(res + '页面PV UV');
+        })
     },
     methods: {
         viewArt(authorId) {
@@ -141,12 +140,13 @@ export default {
                 this.enterAuthorPage(authorId);
             } else {
                 this.openApp();
-            }
+            } 
         },
         enterAuthorPage(authorId) {
             if (util.isAndroid()) {
                 callNative.viewArt(authorId);
             } else if (util.isIOS()) {
+                // window.webkit.messageHandlers.viewArt.postMessage({'authorId': authorId});
                 callNative.viewArt(authorId);
             } else {
                 console.log('浏览器环境中')
@@ -176,6 +176,7 @@ export default {
             var timer = null;
             var isInstalled = false;
             if(/MicroMessenger/gi.test(navigator.userAgent)) {
+                // 引导用户在浏览器中打开
                 this.toastMsg = '请使用浏览器打开';
                 this.toastDuration = 2000;
             } else if(winScreenWidth < 800){
@@ -213,10 +214,10 @@ export default {
                 'supTitle': '【里世界】年轻正当时',
                 'subTitle': '打破次元壁的冰上阴阳师',
                 // todo
-                // 'url': this.shareDomain + '/acgn-young/html/index.html', 
-                'url': 'http://172.16.185.182/acgn-young/html/index.html', 
-                // 'url': 'http://172.18.4.30:8094/index.html', 
-                'avatar': this.shareDomain + '/utils/image/acgn-young.jpg'  
+                'url': this.shareDomain + '/acgn-young/html/index.html', 
+                // 'url': 'http://172.16.185.182/acgn-young/index.html', 
+                // 'url': 'http://172.18.4.30:8801/index.html', 
+                'avatar': this.shareDomain + '/utils/image/share-avatar1.jpg'  
             };
             if(util.isAndroid()) {
                 callNative.shareWeb(param.supTitle, param.subTitle, param.url, param.avatar);
