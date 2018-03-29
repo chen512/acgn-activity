@@ -72,13 +72,15 @@ export default {
 		if(ua.match(/android/i)){
 		    url = {
 		        open: 'lishijie://splash',
-		        down: 'https://www.lishijie.net/download/android/lishijie.apk'
+		        down: 'https://www.lishijie.net/download/android/lishijie.apk',
+                store: 'market://search?q=里世界'
 		    };
 		}
 		if(ua.match(/iphone|ipod|ipad/)){
 		    url = {
 		        open: 'lishijie://splash',
-		        down: 'https://itunes.apple.com/cn/app/wei-xin/id414478124?mt=8&ign-mpt=uo%3D4'
+		        down: 'https://itunes.apple.com/cn/app/id1314216768',
+                store: 'https://itunes.apple.com/cn/app/wei-xin/id1314216768'
 		    };
 		}
 		let winScreenWidth = window.screen.width;
@@ -100,7 +102,7 @@ export default {
 		    timer = setTimeout(function() {
 		        document.body.removeChild(iframe);
 		        if(!isInstalled){
-		            window.location.href = 'market://search?q=里世界';
+		            window.location.href = url.store;
 		        }
 		    }, 200);
 		} else {

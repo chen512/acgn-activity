@@ -186,7 +186,6 @@
 
             // 关注操作的回调函数
             window.focus = function(focus, authorId, authorList) {
-
                 if(authorList) {
                     self.updateFocusBtn(JSON.parse(authorList),authorId);
                     self.toastMsg = '你已关注此作者，快去他/她的主页看看吧！';
@@ -242,7 +241,6 @@
             },
             updateFocusBtn(data,authorId) {
                 this.authorList = data;
-
                 let list = document.querySelectorAll('.focus');
                 for(let i = 0; i < this.authorList.length; i++) {
                     if(this.authorList[i].authorId == authorId) {
