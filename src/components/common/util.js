@@ -79,8 +79,6 @@ export default {
 		if(ua.match(/iphone|ipod|ipad/)){
 		    url = {
 		        open: 'lishijie://splash',
-		        down: 'https://itunes.apple.com/cn/app/id1314216768',
-                store: 'https://itunes.apple.com/cn/app/wei-xin/id1314216768'
 		    };
 		}
 		let winScreenWidth = window.screen.width;

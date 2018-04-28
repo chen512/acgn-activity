@@ -32,22 +32,6 @@ exports.buildHtmlPlugins = function(dir, injectHTMLData) {
     dirs.forEach(function(dir) {
         if(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'debug') {
             plugins.push(new HtmlWebpackPlugin({
-            /*    title: 'Flyme游戏中心活动',
-                extraHeaders: '<meta http-equiv="x-ua-compatible" content="ie=edge">\
-                                <meta http-equiv="x-dns-prefetch-control" content="on">\
-		                        <meta name="format-detection" content="telephone=no,email=no,adress=no">\
-		                        <meta name="description" content="Flyme GameCenter Actvity">\
-		                        <!--caniuse dns-prefetch is support unkonw-->\
-		                        <meta name="mobile-web-app-capable" content="yes">\
-		                        <!--360-->\
-		                        <meta name="renderer" content="webkit">\
-		                        <!--uc-->\
-		                        <meta name="imagemode" content="force">\
-		                        <meta name="nightmode" content="disable">\
-                                <link rel="dns-prefetch" href="//api-game.meizu.com">\
-		                        <link rel="dns-prefetch" href="//api.game.meizu.com">\
-		                        <link rel="preconnect" href="//api-game.meizu.com" crossorigin>\
-		                        <link rel="preconnect" href="//api.game.meizu.com" crossorigin>',*/
                 inject: 'body',
                 filename: 'html/index.html',
                 template: path.join(config.ACTIVITY_BASE_DIR, `./entrys/${dir}`, 'index.html'),
