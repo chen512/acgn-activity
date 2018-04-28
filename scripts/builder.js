@@ -50,7 +50,6 @@ exports.buildHtmlPlugins = function(dir, injectHTMLData) {
             }));
         } else {
             plugins.push(new HtmlWebpackPlugin({
-               /* title: 'Flyme游戏中心活动',*/
                 inject: 'body',
                 template: path.join(config.ACTIVITY_BASE_DIR, `./entrys/${dir}`, 'index.html'),
                 chunks: ['vendor', dir],
